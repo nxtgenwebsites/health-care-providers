@@ -239,6 +239,35 @@
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
 
+        .drag-area {
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .drag-area:hover {
+            border-color: #3B82F6;
+            background: #F1F5F9 !important;
+        }
+        
+        .drag-area.active {
+            border-color: #3B82F6;
+            background: #F1F5F9 !important;
+        }
+        
+        .browsebtn {
+            background: linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
+            border: none;
+        }
+        
+        .browsebtn:hover {
+            opacity: 0.9;
+        }
+        
+        .text-muted {
+            color: #8B98A5 !important;
+        }
+
 
     </style>
 </head>
@@ -291,20 +320,46 @@
                     <div class="card-header">
                         <h5 class="card-title mb-0">Import Organizations</h5>
                     </div>
-                    <div class="card-body">
-                        <!-- File Upload Area -->
-                        <div class="drag-area" id="dragArea">
-                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <h6>Drag & Drop CSV file here</h6>
-                            <p>OR</p>
-                            <button class="btn btn-primary browsebtn" onclick="document.getElementById('fileInput').click()">
-                                Browse File
-                            </button>
-                            <input type="file" id="fileInput" hidden accept=".csv">
+                    <div class="card-body text-center p-5">
+                        <p class="text-muted mb-5" style="color: #8B98A5 !important;">
+                            Upload organizations using a file containing all of their information. 
+                            This is particularly useful when you have a large number of organizations to import.
+                        </p>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-muted"><i class="bi bi-cloud-arrow-up"></i>Upload your file</span>
+                                <a href="#" class="text-primary text-decoration-none">
+                                    <i class="fas fa-download me-1"></i>Download example file (.csv)
+                                </a>
+                            </div>
                         </div>
-
+            
+                        <!-- File Upload Area -->
+                        <div class="drag-area" id="dragArea" style="border: 2px dashed #E2E8F0; background: #F8FAFC;">
+                            <div class="text-center py-5">
+                                <div class="mb-3">
+                                    <i class="bi bi-cloud-arrow-up"></i>
+                                </div>
+                                <p class="text-muted mb-2">Select your file or drag and drop it here</p>
+                                <p class="text-muted small">CSV, XLS or XLSX (max. 800MB)</p>
+                                <button class="btn btn-primary browsebtn px-4 mt-2" onclick="document.getElementById('fileInput').click()">
+                                    Browse File
+                                </button>
+                                <input type="file" id="fileInput" hidden accept=".csv,.xls,.xlsx">
+                            </div>
+                        </div>
+            
+                        <div class="mt-4">
+                            <small class="text-muted">
+                                <i class="fas fa-lock me-1"></i>
+                                We won't sell, rent or use your database for any commercial purposes. 
+                                <a href="#" class="text-decoration-none">Read our Privacy Policy</a>
+                            </small>
+                        </div>
+            
                         <!-- Field Mapping Section (Initially Hidden) -->
-                        <div class="field-mapping mt-4" id="fieldMapping">
+                        <div class="field-mapping mt-4" id="fieldMapping" style="display: none;">
                             <h5 class="mb-3">Map CSV Fields</h5>
                             <div id="mappingContainer">
                                 <!-- Mapping fields will be dynamically added here -->
@@ -313,14 +368,11 @@
                                 Confirm Mapping
                             </button>
                         </div>
-
+            
                         <!-- Thank You Message (Initially Hidden) -->
                         <div class="thank-you-message text-center py-5" id="thankYouMessage" style="display: none;">
                             <div class="success-icon mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg>
+                                <i class="fas fa-check-circle text-success" style="font-size: 48px;"></i>
                             </div>
                             <h3 class="text-success mb-3">Thank You!</h3>
                             <p class="text-muted">Your file has been successfully uploaded and fields have been mapped.</p>
@@ -329,7 +381,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- Right Column: Multi-step Form (to be implemented) -->
             <!-- Right Column: Multi-step Form -->
             <div class="col-md-6" id="formColumn">
