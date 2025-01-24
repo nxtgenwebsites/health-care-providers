@@ -81,6 +81,22 @@
             display: flex;
             gap: 10px;
         }
+
+        .uploadbtn, .browsebtn {
+          background:  linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
+          border: none;
+          padding: 6px 23px;
+        }
+
+        #nextBtn {
+            background:  linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
+            border: none;
+            padding: 6px 23px;
+        }
+        .progress-bar {
+            background:  linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
+        }
+
     </style>
 </head>
 
@@ -144,7 +160,7 @@
                             <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
                             <h6>Drag & Drop CSV file here</h6>
                             <p>OR</p>
-                            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            <button class="btn btn-primary browsebtn" onclick="document.getElementById('fileInput').click()">
                                 Browse File
                             </button>
                             <input type="file" id="fileInput" hidden accept=".csv">
@@ -171,7 +187,7 @@
                             </div>
                             <h3 class="text-success mb-3">Thank You!</h3>
                             <p class="text-muted">Your file has been successfully uploaded and fields have been mapped.</p>
-                            <button class="btn btn-primary mt-3" onclick="resetForm()">Upload Another File</button>
+                            <button class="btn btn-primary mt-3 uploadbtn" onclick="resetForm()">Upload Another File</button>
                         </div>
                     </div>
                 </div>
