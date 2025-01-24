@@ -96,6 +96,32 @@
         .progress-bar {
             background:  linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
         }
+        .time-slot {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .time-slot-header {
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .time-inputs {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .time-inputs .form-group {
+            flex: 1;
+        }
+        
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
 
     </style>
 </head>
@@ -220,14 +246,22 @@
                                 <label class="form-label">Facility Type*</label>
                                 <select class="form-select" name="facility_type" required>
                                     <option value="">Select Facility Type</option>
-                                    <!-- Options will be added later -->
+                                    <option value="hospital">Hospital</option>
+                                    <option value="emergency">Emergency</option>
+                                    <option value="medical labs">Medical Labs</option>
+                                    <option value="chemists">Chemists</option>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Ownership Type*</label>
                                 <select class="form-select" name="ownership_type" required>
                                     <option value="">Select Ownership Type</option>
-                                    <!-- Options will be added later -->
+                                    <option value="government">Government</option>
+                                    <option value="state">State</option>
+                                    <option value="private">Private</option>
+                                    <option value="charity">Charity</option>
+                                    <option value="church">Church</option>
+                                    
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -265,35 +299,49 @@
                         </form>
 
                         <!-- Step 3: Additional Details -->
-                        <form id="step3" class="form-step" style="display: none;">
-                            <div class="mb-3">
-                                <label class="form-label">Google Map Link</label>
-                                <input type="url" class="form-control" name="google_map_link">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">A&E Available?*</label>
-                                <select class="form-select" name="ae_available" required>
-                                    <option value="">Select Option</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Is 24 Hours?*</label>
-                                <select class="form-select" name="is_24hours" required onchange="toggle24HourFields(this.value)">
-                                    <option value="">Select Option</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
+                        <!-- Step 3: Additional Details -->
+<form id="step3" class="form-step" style="display: none;">
+    <div class="mb-3">
+        <label class="form-label">Google Map Link</label>
+        <input type="url" class="form-control" name="google_map_link">
+    </div>
+    
+    <!-- A&E Checkbox -->
+    <div class="mb-3">
+        <label class="form-label mb-2">A&E Available?*</label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="aeCheckbox" name="ae_available">
+            <label class="form-check-label" for="aeCheckbox">
+                Yes, A&E is available
+            </label>
+        </div>
+    </div>
 
-                            <!-- Time Schedule Fields (Hidden by default) -->
-                            <div id="timeSchedule" style="display: none;">
-                                <div class="time-slots">
-                                    <!-- Time slots will be dynamically added here -->
-                                </div>
-                            </div>
-                        </form>
+    <!-- 24 Hours Service -->
+    <div class="mb-3">
+        <label class="form-label mb-2">Is 24 Hours?*</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="is_24hours" id="24hours_yes" value="yes" checked>
+            <label class="form-check-label" for="24hours_yes">
+                Yes
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="is_24hours" id="24hours_no" value="no">
+            <label class="form-check-label" for="24hours_no">
+                No
+            </label>
+        </div>
+    </div>
+
+    <!-- Time Schedule Fields (Hidden by default) -->
+    <div id="timeSchedule" style="display: none;" class="mt-4">
+        <h6 class="mb-3">Operating Hours</h6>
+        <div class="time-slots">
+            <!-- Time slots will be dynamically added here -->
+        </div>
+    </div>
+</form>
 
                         <!-- Navigation Buttons -->
                         <div class="d-flex justify-content-between mt-4">
@@ -714,6 +762,82 @@
             document.querySelector('.col-md-6').classList.remove('full-width');
             formColumn.style.display = 'block';
         }
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeScheduleDiv = document.getElementById('timeSchedule');
+            const timeSlotsDiv = timeScheduleDiv.querySelector('.time-slots');
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        
+            // Create time slots
+            function createTimeSlots() {
+                timeSlotsDiv.innerHTML = days.map(day => `
+                    <div class="time-slot">
+                        <div class="time-slot-header">${day}</div>
+                        <div class="time-inputs">
+                            <div class="form-group">
+                                <label class="form-label">Start Time</label>
+                                <input type="time" class="form-control" name="${day.toLowerCase()}_start" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Time</label>
+                                <input type="time" class="form-control" name="${day.toLowerCase()}_end" required>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        
+            // Create time slots initially
+            createTimeSlots();
+        
+            // Handle radio button change
+            document.querySelectorAll('input[name="is_24hours"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'no') {
+                        timeScheduleDiv.style.display = 'block';
+                        // Make time inputs required
+                        timeScheduleDiv.querySelectorAll('input[type="time"]').forEach(input => {
+                            input.required = true;
+                        });
+                    } else {
+                        timeScheduleDiv.style.display = 'none';
+                        // Remove required attribute when hidden
+                        timeScheduleDiv.querySelectorAll('input[type="time"]').forEach(input => {
+                            input.required = false;
+                        });
+                    }
+                });
+            });
+        
+            // Add validation to ensure at least one checkbox is checked
+            function validateForm() {
+                const is24Hours = document.querySelector('input[name="is_24hours"]:checked').value;
+                
+                if (is24Hours === 'no') {
+                    // Validate all time inputs are filled
+                    const timeInputs = timeScheduleDiv.querySelectorAll('input[type="time"]');
+                    for (let input of timeInputs) {
+                        if (!input.value) {
+                            alert('Please fill in all time slots');
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        
+            // Add validation to the next/submit button click
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                const originalNextClick = nextBtn.onclick;
+                nextBtn.onclick = function(e) {
+                    if (!validateForm()) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    if (originalNextClick) return originalNextClick.call(this, e);
+                };
+            }
+        });
     </script>
 </body>
 
