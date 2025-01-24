@@ -331,6 +331,7 @@
             </div>
 
             <!-- Right Column: Multi-step Form (to be implemented) -->
+            <!-- Right Column: Multi-step Form -->
             <div class="col-md-6" id="formColumn">
                 <div class="card">
                     <div class="card-header">
@@ -346,17 +347,15 @@
                             <span class="step-indicator" id="step2Indicator">Location</span>
                             <span class="step-indicator" id="step3Indicator">Details</span>
                         </div>
-
+            
                         <!-- Step 1: Organization Details -->
                         <form id="step1" class="form-step">
                             <div class="mb-3">
-                                <label class="form-label">Organization Name*</label>
-                                <input type="text" class="form-control" name="organization_name" required>
+                                <input type="text" class="form-control" name="organization_name" placeholder="Organization Name*" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Facility Type*</label>
                                 <select class="form-select" name="facility_type" required>
-                                    <option value="">Select Facility Type</option>
+                                    <option value="">Facility Type*</option>
                                     <option value="hospital">Hospital</option>
                                     <option value="emergency">Emergency</option>
                                     <option value="medical labs">Medical Labs</option>
@@ -364,111 +363,84 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Ownership Type*</label>
                                 <select class="form-select" name="ownership_type" required>
-                                    <option value="">Select Ownership Type</option>
+                                    <option value="">Ownership Type*</option>
                                     <option value="government">Government</option>
                                     <option value="state">State</option>
                                     <option value="private">Private</option>
                                     <option value="charity">Charity</option>
                                     <option value="church">Church</option>
-                                    
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Email Address*</label>
-                                <input type="email" class="form-control" name="email_address" required>
+                                <input type="email" class="form-control" name="email_address" placeholder="Email Address*" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Phone Number*</label>
-                                <input type="tel" class="form-control" name="phone_number" required>
+                                <input type="tel" class="form-control" name="phone_number" placeholder="Phone Number*" required>
                             </div>
                         </form>
-
+            
                         <!-- Step 2: Location Information -->
                         <form id="step2" class="form-step" style="display: none;">
-
                             <div class="mb-3 form-group">
-                                <label for="country">Country</label>
-                                <select id="country" class="form-control" required>
-                                    <option value="">Select Country</option>
+                                <select id="country" class="form-select" required>
+                                    <option value="">Select Country*</option>
                                 </select>
                             </div>
                             <div class="mb-3 form-group">
-                                <label for="state">State</label>
-                                <select id="state" class="form-control" required disabled>
-                                    <option value="">Select State</option>
+                                <select id="state" class="form-select" required disabled>
+                                    <option value="">Select State*</option>
                                 </select>
                             </div>
                             <div class="mb-3 form-group">
-                                <label class="form-label">City</label>
-                                <input type="text" class="form-control" name="city" required>
+                                <input type="text" class="form-control" name="city" placeholder="City*" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Zipcode*</label>
-                                <input type="text" class="form-control" name="zipcode" required>
+                                <input type="text" class="form-control" name="zipcode" placeholder="Zipcode*" required>
                             </div>
                         </form>
-
+            
                         <!-- Step 3: Additional Details -->
-                        <!-- Step 3: Additional Details -->
-<form id="step3" class="form-step" style="display: none;">
-    <div class="mb-3">
-        <label class="form-label">Google Map Link</label>
-        <input type="url" class="form-control" name="google_map_link">
-    </div>
-    
-    <!-- A&E Checkbox -->
-    <div class="mb-3">
-        <label class="form-label mb-2">A&E Available?*</label>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="aeCheckbox" name="ae_available">
-            <label class="form-check-label" for="aeCheckbox">
-                Yes, A&E is available
-            </label>
-        </div>
-    </div>
-
-    <!-- 24 Hours Service -->
-    <div class="mb-3">
-        <label class="form-label mb-2">Is 24 Hours?*</label>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="is_24hours" id="24hours_yes" value="yes" checked>
-            <label class="form-check-label" for="24hours_yes">
-                Yes
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="is_24hours" id="24hours_no" value="no">
-            <label class="form-check-label" for="24hours_no">
-                No
-            </label>
-        </div>
-    </div>
-
-    <!-- Time Schedule Fields (Hidden by default) -->
-    <!-- Time Schedule Fields -->
-<div id="timeSchedule" style="display: none;" class="mt-4">
-    <h6 class="mb-4">Operating Hours</h6>
-    <div class="time-slots">
-        <!-- Updated time slot structure -->
-        <div class="time-slot row align-items-center g-3 mb-2">
-            <div class="col-3">
-                <span class="day-label">Monday</span>
-            </div>
-            <div class="col-9">
-                <div class="d-flex align-items-center time-input-group">
-                    <input type="time" class="form-control form-control-sm" name="monday_start" required>
-                    <span class="time-separator mx-2">to</span>
-                    <input type="time" class="form-control form-control-sm" name="monday_end" required>
-                </div>
-            </div>
-        </div>
-        <!-- Repeat for other days -->
-    </div>
-</div>
-</form>
-
+                        <form id="step3" class="form-step" style="display: none;">
+                            <div class="mb-3">
+                                <input type="url" class="form-control" name="google_map_link" placeholder="Google Map Link">
+                            </div>
+                            
+                            <!-- A&E Available Section -->
+                            <div class="mb-3 d-flex align-items-center">
+                                <div class="me-3">Is your facility A&E?</div>
+                                <div class="form-check form-check-inline mb-0">
+                                    <input class="form-check-input" type="radio" name="ae_available" id="ae_yes" value="yes">
+                                    <label class="form-check-label" for="ae_yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline mb-0">
+                                    <input class="form-check-input" type="radio" name="ae_available" id="ae_no" value="no">
+                                    <label class="form-check-label" for="ae_no">No</label>
+                                </div>
+                            </div>
+            
+                            <!-- 24 Hours Service Section -->
+                            <div class="mb-3 d-flex align-items-center">
+                                <div class="me-3">Is 24 Hours Service?*</div>
+                                <div class="form-check form-check-inline mb-0">
+                                    <input class="form-check-input" type="radio" name="is_24hours" id="24hours_yes" value="yes" checked>
+                                    <label class="form-check-label" for="24hours_yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline mb-0">
+                                    <input class="form-check-input" type="radio" name="is_24hours" id="24hours_no" value="no">
+                                    <label class="form-check-label" for="24hours_no">No</label>
+                                </div>
+                            </div>
+            
+                            <!-- Time Schedule Fields -->
+                            <div id="timeSchedule" style="display: none;" class="mt-4">
+                                <h6 class="mb-4">Operating Hours</h6>
+                                <div class="time-slots">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </form>
+            
                         <!-- Navigation Buttons -->
                         <div class="d-flex justify-content-between mt-4">
                             <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="display: none;">Previous</button>
@@ -476,8 +448,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>        </div>
     </div>
     <!-- Hero Start -->
     <!-- Blogs End -->
@@ -677,9 +648,10 @@
         }
 
         // Form step handling
+        // Form step handling
         let currentStep = 1;
         const totalSteps = 3;
-
+        
         function updateProgress() {
             const progress = (currentStep / totalSteps) * 100;
             document.getElementById('formProgress').style.width = `${progress}%`;
@@ -697,7 +669,7 @@
                 }
             }
         }
-
+        
         function showStep(step) {
             // Hide all forms
             document.querySelectorAll('.form-step').forEach(form => {
@@ -713,7 +685,7 @@
             
             updateProgress();
         }
-
+        
         function nextStep() {
             // Validate current step
             const currentForm = document.getElementById(`step${currentStep}`);
@@ -729,172 +701,21 @@
                 currentForm.reportValidity();
             }
         }
-
+        
         function prevStep() {
             if (currentStep > 1) {
                 currentStep--;
                 showStep(currentStep);
             }
         }
-
-        function toggle24HourFields(value) {
-            const timeSchedule = document.getElementById('timeSchedule');
-            if (value === 'no') {
-                timeSchedule.style.display = 'block';
-                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-                const timeSlots = document.querySelector('.time-slots');
-                timeSlots.innerHTML = days.map(day => `
-                    <div class="time-slot">
-                        <div class="time-slot-header">${day}</div>
-                        <div class="time-inputs">
-                            <div class="mb-3">
-                                <label class="form-label">Start Time</label>
-                                <input type="time" class="form-control" name="${day.toLowerCase()}_start" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">End Time</label>
-                                <input type="time" class="form-control" name="${day.toLowerCase()}_end" required>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                timeSchedule.style.display = 'none';
-            }
-        }
-
-        // Initialize select2 dropdowns
-        $(document).ready(function() {
-            // Initialize country select with flags
-            $('.select2-country').select2({
-                theme: 'bootstrap-5',
-                templateResult: formatCountry,
-                templateSelection: formatCountry,
-                ajax: {
-                    url: '/api/countries', // You'll need to create this endpoint in Laravel
-                    dataType: 'json',
-                    delay: 250,
-                    processResults: function(data) {
-                        return {
-                            results: data.map(country => ({
-                                id: country.id,
-                                text: country.name,
-                                flag: country.flag
-                            }))
-                        };
-                    }
-                }
-            });
-
-            // Initialize state select
-            $('.select2-state').select2({
-                theme: 'bootstrap-5',
-                ajax: {
-                    url: function() {
-                        const countryId = $('.select2-country').val();
-                        return `/api/states/${countryId}`; // You'll need to create this endpoint
-                    },
-                    dataType: 'json',
-                    delay: 250,
-                    processResults: function(data) {
-                        return {
-                            results: data.map(state => ({
-                                id: state.id,
-                                text: state.name
-                            }))
-                        };
-                    }
-                }
-            });
-
-            // Initialize city select
-            $('.select2-city').select2({
-                theme: 'bootstrap-5',
-                ajax: {
-                    url: function() {
-                        const stateId = $('.select2-state').val();
-                        return `/api/cities/${stateId}`; // You'll need to create this endpoint
-                    },
-                    dataType: 'json',
-                    delay: 250,
-                    processResults: function(data) {
-                        return {
-                            results: data.map(city => ({
-                                id: city.id,
-                                text: city.name
-                            }))
-                        };
-                    }
-                }
-            });
-
-            // Handle country change
-            $('.select2-country').on('change', function() {
-                const countryId = $(this).val();
-                if (countryId) {
-                    $('.select2-state').prop('disabled', false).val(null).trigger('change');
-                    $('.select2-city').prop('disabled', true).val(null).trigger('change');
-                } else {
-                    $('.select2-state, .select2-city').prop('disabled', true).val(null).trigger('change');
-                }
-            });
-
-            // Handle state change
-            $('.select2-state').on('change', function() {
-                const stateId = $(this).val();
-                if (stateId) {
-                    $('.select2-city').prop('disabled', false).val(null).trigger('change');
-                } else {
-                    $('.select2-city').prop('disabled', true).val(null).trigger('change');
-                }
-            });
-        });
-
-        // Format country option with flag
-        function formatCountry(country) {
-            if (!country.id || !country.flag) return country.text;
-            return $(`<span><img src="${country.flag}" class="country-flag" style="width: 20px; margin-right: 10px;"/> ${country.text}</span>`);
-        }
-
-        function submitForm() {
-            // Collect all form data
-            const formData = {};
-            const forms = document.querySelectorAll('.form-step');
-            forms.forEach(form => {
-                const formElements = form.elements;
-                for (let i = 0; i < formElements.length; i++) {
-                    const element = formElements[i];
-                    if (element.name) {
-                        formData[element.name] = element.value;
-                    }
-                }
-            });
-            
-            // Here you would typically send the data to your Laravel backend
-            console.log('Form submitted:', formData);
-            alert('Form submitted successfully!');
-        }
-
-        function resetForm() {
-            // Reset file input
-            fileInput.value = '';
-            
-            // Hide thank you message
-            document.getElementById('thankYouMessage').style.display = 'none';
-            
-            // Show drag area
-            dragArea.style.display = 'block';
-            
-            // Reset column layout
-            document.querySelector('.col-md-6').classList.remove('full-width');
-            formColumn.style.display = 'block';
-        }
+        
+        // Handle time schedule visibility
         document.addEventListener('DOMContentLoaded', function() {
             const timeScheduleDiv = document.getElementById('timeSchedule');
             const timeSlotsDiv = timeScheduleDiv.querySelector('.time-slots');
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         
-            // Create time slots with new layout
+            // Create time slots
             function createTimeSlots() {
                 timeSlotsDiv.innerHTML = days.map(day => `
                     <div class="time-slot row align-items-center g-3 mb-2">
@@ -903,31 +724,38 @@
                         </div>
                         <div class="col-9">
                             <div class="d-flex align-items-center time-input-group">
-                                <input type="time" class="form-control form-control-sm" name="${day.toLowerCase()}_start" required>
+                                <input type="time" class="form-control form-control-sm" name="${day.toLowerCase()}_start" 
+                                       placeholder="Start Time" required>
                                 <span class="time-separator mx-2">to</span>
-                                <input type="time" class="form-control form-control-sm" name="${day.toLowerCase()}_end" required>
+                                <input type="time" class="form-control form-control-sm" name="${day.toLowerCase()}_end" 
+                                       placeholder="End Time" required>
                             </div>
                         </div>
                     </div>
                 `).join('');
             }
         
-            // Create time slots initially
             createTimeSlots();
         
-            // Handle radio button change for 24 hours toggle
+            // Handle 24 hours toggle
             document.querySelectorAll('input[name="is_24hours"]').forEach(radio => {
                 radio.addEventListener('change', function() {
-                    timeScheduleDiv.style.display = this.value === 'no' ? 'block' : 'none';
+                    const showTimeSchedule = this.value === 'no';
+                    timeScheduleDiv.style.display = showTimeSchedule ? 'block' : 'none';
+                    
+                    // Update required attribute for time inputs
                     const timeInputs = timeScheduleDiv.querySelectorAll('input[type="time"]');
                     timeInputs.forEach(input => {
-                        input.required = this.value === 'no';
+                        input.required = showTimeSchedule;
                     });
                 });
             });
+        
+            // Add required to A&E radio buttons
+            document.querySelectorAll('input[name="ae_available"]').forEach(radio => {
+                radio.required = true;
+            });
         });
-// Elements
-// Elements
 const countryDropdown = $('#country');
 const stateDropdown = $('#state');
 const cityDropdown = $('#city');
