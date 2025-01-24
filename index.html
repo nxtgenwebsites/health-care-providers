@@ -403,14 +403,7 @@
                         </div>
             
                         <!-- Thank You Message (Initially Hidden) -->
-                        <div class="thank-you-message text-center py-5" id="thankYouMessage" style="display: none;">
-                            <div class="success-icon mb-4">
-                                <i class="fas fa-check-circle text-success" style="font-size: 48px;"></i>
-                            </div>
-                            <h3 class="text-success mb-3">Thank You!</h3>
-                            <p class="text-muted">Your file has been successfully uploaded and fields have been mapped.</p>
-                            <button class="btn btn-primary mt-3 uploadbtn" onclick="resetForm()">Upload Another File</button>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -540,6 +533,14 @@
                     </div>
                 </div>
             </div>        </div>
+            <div class="thank-you-message text-center py-5" id="thankYouMessage" style="display: none;">
+                <div class="success-icon mb-4">
+                    <i class="fas fa-check-circle text-success" style="font-size: 48px;"></i>
+                </div>
+                <h3 class="text-success mb-3">Thank You!</h3>
+                <p class="text-muted">Your file has been successfully uploaded and fields have been mapped.</p>
+                <button class="btn btn-primary mt-3 uploadbtn" onclick="resetForm()">Upload Another File</button>
+            </div>
     </div>
     <!-- Hero Start -->
     <!-- Blogs End -->
@@ -1040,30 +1041,32 @@ function resetForm() {
 }
 
 function submitForm() {
-    // Hide the form section and OR divider
+    // Hide all sections except thank you message
     const formColumn = document.getElementById('formColumn');
     const orDivider = document.querySelector('.divider');
-    const uploadSection = document.querySelector('.card');  // Get the bulk upload section
-    if (formColumn) formColumn.style.display = 'none';
-    if (orDivider) orDivider.style.display = 'none';
-    if (uploadSection) uploadSection.style.display = 'none';
+    const uploadSection = document.querySelector('#dragArea').closest('.card');
+    const uploadCard = document.querySelector('.card');
+
+    // Hide all sections
+    formColumn.style.display = 'none';
+    orDivider.style.display = 'none';
+    uploadCard.style.display = 'none';
     
     // Show the thank you message
     const thankYouMessage = document.getElementById('thankYouMessage');
     if (thankYouMessage) {
         thankYouMessage.style.display = 'block';
-        thankYouMessage.style.marginTop = '2rem';  // Add some spacing from top
+        thankYouMessage.style.marginTop = '2rem';
         // Scroll to thank you message with smooth behavior
         thankYouMessage.scrollIntoView({ 
             behavior: 'smooth',
-            block: 'center'  // This will center the element in the viewport
+            block: 'center'
         });
     }
 
-    // Here you would typically send the form data to your backend
+    // Log form submission (you would typically send this to your backend)
     console.log('Form submitted');
 }
-
     </script>
 </body>
 
