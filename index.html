@@ -290,10 +290,8 @@
                                 </select>
                             </div>
                             <div class="mb-3 form-group">
-                                <label for="city">City</label>
-                                <select id="city" class="form-control" required disabled>
-                                    <option value="">Select City</option>
-                                </select>
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" name="city" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Zipcode*</label>
@@ -901,33 +899,6 @@ function loadStates(countryCode) {
 }
 
 // Step 3: Load Cities
-function loadCities(stateCode, countryCode) {
-    console.log('Fetching cities for state:', stateCode, 'in country:', countryCode); // Debugging log
-    $.ajax({
-        url: `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${countryCode}/regions/${stateCode}/cities`,
-        method: 'GET',
-        headers: {
-            'x-rapidapi-host': 'wft-geo-db.p.rapidapi.com',
-            'x-rapidapi-key': 'b83f74efaamshb4574179b332748p156dadjsn907ed0ab88f9' // Replace with your actual API key
-        },
-        success: function (data) {
-            console.log('Cities fetched successfully:', data); // Debugging log
-            cityDropdown.empty().append('<option value="">Select City</option>');
-            if (data.data && data.data.length > 0) {
-                data.data.forEach(city => {
-                    cityDropdown.append(new Option(city.name, city.id));
-                });
-                cityDropdown.prop('disabled', false);
-            } else {
-                alert('No cities found for the selected state.');
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching cities:', error); // Debugging log
-            alert('Failed to load cities. Please try again later.');
-        }
-    });
-}
 
 // Step 4: Event Listeners
 $(document).ready(function () {
