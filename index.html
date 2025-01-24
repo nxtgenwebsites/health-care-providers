@@ -296,7 +296,9 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        
+        .or-divider {
+            margin: 2rem 0;
+        }
 
 
     </style>
@@ -407,7 +409,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-4">
+            <div class="row mb-4 or-divider" id="orDivider">
                 <div class="col-12">
                     <div class="divider d-flex align-items-center justify-content-center">
                         <strong class="divider-text px-3" style="padding: 40px; font-size: 24px">OR</strong>
@@ -1043,14 +1045,15 @@ function resetForm() {
 function submitForm() {
     // Hide all sections except thank you message
     const formColumn = document.getElementById('formColumn');
-    const orDivider = document.querySelector('.divider');
-    const uploadSection = document.querySelector('#dragArea').closest('.card');
+    const orDivider = document.querySelector('.or-divider');  // Updated selector
     const uploadCard = document.querySelector('.card');
+    const pageTitle = document.querySelector('.row.mb-4'); // Page title section
 
     // Hide all sections
-    formColumn.style.display = 'none';
-    orDivider.style.display = 'none';
-    uploadCard.style.display = 'none';
+    if (formColumn) formColumn.style.display = 'none';
+    if (orDivider) orDivider.style.display = 'none';
+    if (uploadCard) uploadCard.style.display = 'none';
+    if (pageTitle) pageTitle.style.display = 'none';
     
     // Show the thank you message
     const thankYouMessage = document.getElementById('thankYouMessage');
@@ -1064,10 +1067,35 @@ function submitForm() {
         });
     }
 
-    // Log form submission (you would typically send this to your backend)
+    // Log form submission
     console.log('Form submitted');
 }
-    </script>
+
+// Update resetForm to show the OR divider again
+function resetForm() {
+    selectedFile = null;
+    // Reset other elements...
+
+    // Show all sections again
+    const formColumn = document.getElementById('formColumn');
+    const orDivider = document.querySelector('.or-divider');
+    const uploadCard = document.querySelector('.card');
+    const pageTitle = document.querySelector('.row.mb-4');
+
+    if (uploadCard) uploadCard.style.display = 'block';
+    if (formColumn) formColumn.style.display = 'block';
+    if (orDivider) orDivider.style.display = 'block';
+    if (pageTitle) pageTitle.style.display = 'block';
+
+    // Hide thank you message
+    const thankYouMessage = document.getElementById('thankYouMessage');
+    if (thankYouMessage) {
+        thankYouMessage.style.display = 'none';
+    }
+
+    // Rest of your resetForm code...
+}
+ </script>
 </body>
 
 </html>
