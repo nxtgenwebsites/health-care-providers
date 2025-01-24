@@ -143,6 +143,102 @@
             color: #fff !important;
         }
 
+        .time-slots {
+            background: #fff;
+            border-radius: 8px;
+        }
+        
+        .time-slot {
+            padding: 8px 12px;
+            transition: background-color 0.2s;
+        }
+        
+        .time-slot:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .day-label {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .time-input-group {
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .time-separator {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .form-control-sm {
+            height: 35px;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        /* Make time inputs more compact */
+        input[type="time"] {
+            width: 140px;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        
+        input[type="time"]:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .time-slots {
+            background: #ffffff;
+            border-radius: 8px;
+        }
+        
+        .time-slot {
+            padding: 8px 12px;
+            transition: background-color 0.2s;
+        }
+        
+        .time-slot:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .day-label {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .time-input-group {
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .time-separator {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .form-control-sm {
+            height: 35px;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        /* Make time inputs more compact */
+        input[type="time"] {
+            width: 140px;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        
+        input[type="time"]:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
 
     </style>
 </head>
@@ -351,12 +447,26 @@
     </div>
 
     <!-- Time Schedule Fields (Hidden by default) -->
-    <div id="timeSchedule" style="display: none;" class="mt-4">
-        <h6 class="mb-3">Operating Hours</h6>
-        <div class="time-slots">
-            <!-- Time slots will be dynamically added here -->
+    <!-- Time Schedule Fields -->
+<div id="timeSchedule" style="display: none;" class="mt-4">
+    <h6 class="mb-4">Operating Hours</h6>
+    <div class="time-slots">
+        <!-- Updated time slot structure -->
+        <div class="time-slot row align-items-center g-3 mb-2">
+            <div class="col-3">
+                <span class="day-label">Monday</span>
+            </div>
+            <div class="col-9">
+                <div class="d-flex align-items-center time-input-group">
+                    <input type="time" class="form-control form-control-sm" name="monday_start" required>
+                    <span class="time-separator mx-2">to</span>
+                    <input type="time" class="form-control form-control-sm" name="monday_end" required>
+                </div>
+            </div>
         </div>
+        <!-- Repeat for other days -->
     </div>
+</div>
 </form>
 
                         <!-- Navigation Buttons -->
@@ -784,19 +894,18 @@
             const timeSlotsDiv = timeScheduleDiv.querySelector('.time-slots');
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         
-            // Create time slots
+            // Create time slots with new layout
             function createTimeSlots() {
                 timeSlotsDiv.innerHTML = days.map(day => `
-                    <div class="time-slot">
-                        <div class="time-slot-header">${day}</div>
-                        <div class="time-inputs">
-                            <div class="form-group">
-                                <label class="form-label">Start Time</label>
-                                <input type="time" class="form-control" name="${day.toLowerCase()}_start" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">End Time</label>
-                                <input type="time" class="form-control" name="${day.toLowerCase()}_end" required>
+                    <div class="time-slot row align-items-center g-3 mb-2">
+                        <div class="col-3">
+                            <span class="day-label">${day}</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="d-flex align-items-center time-input-group">
+                                <input type="time" class="form-control form-control-sm" name="${day.toLowerCase()}_start" required>
+                                <span class="time-separator mx-2">to</span>
+                                <input type="time" class="form-control form-control-sm" name="${day.toLowerCase()}_end" required>
                             </div>
                         </div>
                     </div>
@@ -806,54 +915,16 @@
             // Create time slots initially
             createTimeSlots();
         
-            // Handle radio button change
+            // Handle radio button change for 24 hours toggle
             document.querySelectorAll('input[name="is_24hours"]').forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'no') {
-                        timeScheduleDiv.style.display = 'block';
-                        // Make time inputs required
-                        timeScheduleDiv.querySelectorAll('input[type="time"]').forEach(input => {
-                            input.required = true;
-                        });
-                    } else {
-                        timeScheduleDiv.style.display = 'none';
-                        // Remove required attribute when hidden
-                        timeScheduleDiv.querySelectorAll('input[type="time"]').forEach(input => {
-                            input.required = false;
-                        });
-                    }
+                    timeScheduleDiv.style.display = this.value === 'no' ? 'block' : 'none';
+                    const timeInputs = timeScheduleDiv.querySelectorAll('input[type="time"]');
+                    timeInputs.forEach(input => {
+                        input.required = this.value === 'no';
+                    });
                 });
             });
-        
-            // Add validation to ensure at least one checkbox is checked
-            function validateForm() {
-                const is24Hours = document.querySelector('input[name="is_24hours"]:checked').value;
-                
-                if (is24Hours === 'no') {
-                    // Validate all time inputs are filled
-                    const timeInputs = timeScheduleDiv.querySelectorAll('input[type="time"]');
-                    for (let input of timeInputs) {
-                        if (!input.value) {
-                            alert('Please fill in all time slots');
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-        
-            // Add validation to the next/submit button click
-            const nextBtn = document.getElementById('nextBtn');
-            if (nextBtn) {
-                const originalNextClick = nextBtn.onclick;
-                nextBtn.onclick = function(e) {
-                    if (!validateForm()) {
-                        e.preventDefault();
-                        return false;
-                    }
-                    if (originalNextClick) return originalNextClick.call(this, e);
-                };
-            }
         });
 // Elements
 // Elements
