@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health Monitor</title>
+    <link rel="shortcut icon" href="assets/icons/logo.svg" type="image/x-icon" />
+    <link rel="stylesheet" href="css/swiper.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <style>
+        .drag-area {
+            border: 2px dashed #0d6efd;
+            border-radius: 5px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: border 0.3s ease;
+        }
+
+        .drag-area.active {
+            border: 2px solid #0d6efd;
+            background: #e9ecef;
+        }
+
+        .field-mapping {
+            display: none;
+        }
+        
+        /* Add transition for smooth column resizing */
+        .col-md-6 {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        /* Class for full-width state */
+        .col-md-6.full-width {
+            width: 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .mapping-row {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        /* Progress bar and steps styling */
+        .step-indicator {
+            color: #6c757d;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .step-indicator.active {
+            color: #0d6efd;
+        }
+
+        .step-indicator.completed {
+            color: #198754;
+        }
+
+        /* Time schedule styling */
+        .time-slot {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .time-slot-header {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- loading Start -->
+    <div class="loading-screen d-none fixed-top h-100 w-100">
+        <div class="container d-flex flex-column gap-5">
+            <div class="text-center">
+                <img src="assets/images/logo.png" class="img-fluid loading-logo" alt="logo_img" />
+            </div>
+            <div class="d-flex flex-column align-items-center">
+                <button class="btn mouse-btn border-0">
+                    <img src="assets/icons/mouse.svg" alt="mouse_icon" />
+                </button>
+                <span class="text-primary">ENTER</span>
+            </div>
+        </div>
+    </div>
+    <!-- loading End -->
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/"><img src="assets/images/logo.png" width="145" class="img-fluid" alt="logo"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul
+                    class="navbar-nav align-items-lg-center justify-content-lg-center flex-lg-grow-1 mb-2 mb-lg-0 mt-lg-0 mt-4">
+                    <li class="nav-item">
+                        <a class="nav-link mx-2 text-primary" href="emergency.html">Emergency</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2 text-primary" href="community.html">Community</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2 text-primary" href="signup.html">Register</a>
+                    </li>
+                </ul>
+                <div class="login-btn">
+                    <a href="login.html"><button class="btn primary-btn">Login</button></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Left Column: File Upload -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Upload Facility Data</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- File Upload Area -->
+                        <div class="drag-area" id="dragArea">
+                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <h6>Drag & Drop CSV file here</h6>
+                            <p>OR</p>
+                            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                                Browse File
+                            </button>
+                            <input type="file" id="fileInput" hidden accept=".csv">
+                        </div>
+
+                        <!-- Field Mapping Section (Initially Hidden) -->
+                        <div class="field-mapping mt-4" id="fieldMapping">
+                            <h5 class="mb-3">Map CSV Fields</h5>
+                            <div id="mappingContainer">
+                                <!-- Mapping fields will be dynamically added here -->
+                            </div>
+                            <button class="btn btn-success mt-3" onclick="submitMapping()">
+                                Confirm Mapping
+                            </button>
+                        </div>
+
+                        <!-- Thank You Message (Initially Hidden) -->
+                        <div class="thank-you-message text-center py-5" id="thankYouMessage" style="display: none;">
+                            <div class="success-icon mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <h3 class="text-success mb-3">Thank You!</h3>
+                            <p class="text-muted">Your file has been successfully uploaded and fields have been mapped.</p>
+                            <button class="btn btn-primary mt-3" onclick="resetForm()">Upload Another File</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Multi-step Form (to be implemented) -->
+            <div class="col-md-6" id="formColumn">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Facility Information Form</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Progress Bar -->
+                        <div class="progress mb-4" style="height: 3px;">
+                            <div class="progress-bar" role="progressbar" id="formProgress" style="width: 33%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="step-indicator active" id="step1Indicator">Organization</span>
+                            <span class="step-indicator" id="step2Indicator">Location</span>
+                            <span class="step-indicator" id="step3Indicator">Details</span>
+                        </div>
+
+                        <!-- Step 1: Organization Details -->
+                        <form id="step1" class="form-step">
+                            <div class="mb-3">
+                                <label class="form-label">Organization Name*</label>
+                                <input type="text" class="form-control" name="organization_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Facility Type*</label>
+                                <select class="form-select" name="facility_type" required>
+                                    <option value="">Select Facility Type</option>
+                                    <!-- Options will be added later -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ownership Type*</label>
+                                <select class="form-select" name="ownership_type" required>
+                                    <option value="">Select Ownership Type</option>
+                                    <!-- Options will be added later -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email Address*</label>
+                                <input type="email" class="form-control" name="email_address" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number*</label>
+                                <input type="tel" class="form-control" name="phone_number" required>
+                            </div>
+                        </form>
+
+                        <!-- Step 2: Location Information -->
+                        <form id="step2" class="form-step" style="display: none;">
+                            <div class="mb-3">
+                                <label class="form-label">Facility Address*</label>
+                                <input type="text" class="form-control" name="facility_address" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Country*</label>
+                                <input type="text" class="form-control" name="country" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">City*</label>
+                                <input type="text" class="form-control" name="city" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">State*</label>
+                                <input type="text" class="form-control" name="state" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Zipcode*</label>
+                                <input type="text" class="form-control" name="zipcode" required>
+                            </div>
+                        </form>
+
+                        <!-- Step 3: Additional Details -->
+                        <form id="step3" class="form-step" style="display: none;">
+                            <div class="mb-3">
+                                <label class="form-label">Google Map Link</label>
+                                <input type="url" class="form-control" name="google_map_link">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">A&E Available?*</label>
+                                <select class="form-select" name="ae_available" required>
+                                    <option value="">Select Option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Is 24 Hours?*</label>
+                                <select class="form-select" name="is_24hours" required onchange="toggle24HourFields(this.value)">
+                                    <option value="">Select Option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
+                            <!-- Time Schedule Fields (Hidden by default) -->
+                            <div id="timeSchedule" style="display: none;">
+                                <div class="time-slots">
+                                    <!-- Time slots will be dynamically added here -->
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="display: none;">Previous</button>
+                            <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Hero Start -->
+    <!-- Blogs End -->
+
+        <!-- Footer start -->
+        <footer class="footer-section">
+            <div class="container">
+                <div class="row row-gap-3">
+                    <div class="col-lg-5 col-md-6 text-md-start text-center">
+                        <div class="footer-card">
+                            <div class="footer-img">
+                                <a href="">
+                                    <img src="assets/images/logo.png" width="150" alt="" class="img-fluid">
+                                </a>
+                            </div>
+                            <div class="footer-content">
+                                <p class="mt-4 mb-3">Join our newsletter for latest updates <br>
+                                    and features. You don't want to miss it!</p>
+                                <div class="footer-subscribe position-relative w-100">
+                                    <input type="email" class="" placeholder="Enter your email here">
+                                    <button type="submit" class="btn">Subscribe</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 text-md-start text-center">
+                        <ul class="navbar-nav">
+                            <h5 class="fw-bold footer-heading text-primary">Home</h5>
+                            <li class="nav-item"><a href="emergency.html" class="nav-link">Emergency</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Symptoms</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Remote Care</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Monitors</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Health Info</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Blogs</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 text-md-start text-center">
+                        <ul class="navbar-nav">
+                            <h5 class="fw-bold footer-heading text-primary">Communities</h5>
+                            <li class="nav-item"><a href="/user-dashboard/hospitals.html" class="nav-link">Hospitals</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Pharmacy</a></li>
+                            <li class="nav-item"><a href="/user-dashboard/Chemists.html" class="nav-link">Community Digital
+                                    Health Assistants</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Tech Support</a></li>
+                            <li class="nav-item"><a href="/user-dashboard/complaints.html" class="nav-link">Complaints</a></li>
+                            <li class="nav-item"><a href="/user-dashboard/reviews.html" class="nav-link">Reviews</a></li>
+                            <li class="nav-item"><a href="/user-dashboard/privacy-policy.html" class="nav-link">Privacy
+                                    Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 text-md-start text-center">
+                        <ul class="navbar-nav">
+                            <h5 class="fw-bold footer-heading text-primary">Profile</h5>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Sponsorship</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Print</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Password & Pin</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Access Control</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">National Policies</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Share link</a></li>
+                            <li class="nav-item"><a href="login.html" class="nav-link">Delete Account</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 mb-2">
+            <div class="copyright-section d-flex align-items-center">
+                <p class="font-size">© Copyright 2025 HealthMonitor. All rights reserved</p>
+                <p class="ms-md-auto me-3 font-size">Share on socials</p>
+                <div class="social-media">
+                    <img src="assets/icons/X.svg" alt="img" class="">
+                    <img src="assets/icons/Facebook.svg" alt="img" class="">
+                    <img src="assets/icons/Instagram.svg" alt="img" class="">
+                    <img src="assets/icons/Telegram.svg" alt="img" class="">
+                </div>
+            </div>
+        
+        </footer>
+        <!-- Footer end -->
+
+    <!-- Demo Video Start -->
+    <!-- <div class="demo-video d-none" id="demo-video">
+        <div class="video-popup">
+            <iframe src="https://www.youtube.com/embed/1WGTftm_IEU?si=LRPCj-aTZp5tMti9"></iframe>
+        </div>
+    </div> -->
+    <!-- Demo Video End -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+    
+    <script>
+        const dragArea = document.getElementById('dragArea');
+        const fileInput = document.getElementById('fileInput');
+        const fieldMapping = document.getElementById('fieldMapping');
+        const formColumn = document.getElementById('formColumn');
+        const mappingContainer = document.getElementById('mappingContainer');
+
+        // Required fields for mapping
+        const requiredFields = [
+            'organization_name',
+            'facility_type',
+            'ownership_type',
+            'email_address',
+            'phone_number',
+            'facility_address',
+            'country',
+            'city',
+            'state',
+            'zipcode',
+            'google_map_link',
+            'A&E',
+            'is_24hours'
+        ];
+
+        // Drag and drop handlers
+        dragArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragArea.classList.add('active');
+        });
+
+        dragArea.addEventListener('dragleave', () => {
+            dragArea.classList.remove('active');
+        });
+
+        dragArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            handleFile(file);
+        });
+
+        function handleFile(file) {
+            if (file.type === 'text/csv') {
+                // Read CSV headers
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const headers = e.target.result.split('\n')[0].split(',');
+                    showFieldMapping(headers);
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please upload a CSV file');
+            }
+        }
+
+        function showFieldMapping(csvHeaders) {
+            // Hide form column and expand left column
+            formColumn.style.display = 'none';
+            document.querySelector('.col-md-6').classList.add('full-width');
+            fieldMapping.style.display = 'block';
+            
+            // Create mapping interface
+            mappingContainer.innerHTML = '';
+            requiredFields.forEach(field => {
+                const mappingRow = document.createElement('div');
+                mappingRow.className = 'mapping-row';
+                mappingRow.innerHTML = `
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <label class="form-label">${field}:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-select" data-field="${field}">
+                                <option value="">Select CSV Column</option>
+                                ${csvHeaders.map(header => 
+                                    `<option value="${header.trim()}">${header.trim()}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                    </div>
+                `;
+                mappingContainer.appendChild(mappingRow);
+            });
+        }
+
+        function submitMapping() {
+            const mapping = {};
+            requiredFields.forEach(field => {
+                const select = document.querySelector(`select[data-field="${field}"]`);
+                mapping[field] = select.value;
+            });
+            
+            // Here you would typically send the mapping to your Laravel backend
+            console.log('Field mapping:', mapping);
+            
+            // Hide the mapping interface
+            fieldMapping.style.display = 'none';
+            dragArea.style.display = 'none';
+            
+            // Show the thank you message
+            document.getElementById('thankYouMessage').style.display = 'block';
+        }
+
+        // Form step handling
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('formProgress').style.width = `${progress}%`;
+            
+            // Update step indicators
+            for (let i = 1; i <= totalSteps; i++) {
+                const indicator = document.getElementById(`step${i}Indicator`);
+                if (i === currentStep) {
+                    indicator.classList.add('active');
+                } else if (i < currentStep) {
+                    indicator.classList.add('completed');
+                    indicator.classList.remove('active');
+                } else {
+                    indicator.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        function showStep(step) {
+            // Hide all forms
+            document.querySelectorAll('.form-step').forEach(form => {
+                form.style.display = 'none';
+            });
+            
+            // Show current step
+            document.getElementById(`step${step}`).style.display = 'block';
+            
+            // Update buttons
+            document.getElementById('prevBtn').style.display = step === 1 ? 'none' : 'block';
+            document.getElementById('nextBtn').innerHTML = step === totalSteps ? 'Submit' : 'Next';
+            
+            updateProgress();
+        }
+
+        function nextStep() {
+            // Validate current step
+            const currentForm = document.getElementById(`step${currentStep}`);
+            if (currentForm.checkValidity()) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    showStep(currentStep);
+                } else {
+                    // Handle form submission
+                    submitForm();
+                }
+            } else {
+                currentForm.reportValidity();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function toggle24HourFields(value) {
+            const timeSchedule = document.getElementById('timeSchedule');
+            if (value === 'no') {
+                timeSchedule.style.display = 'block';
+                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                const timeSlots = document.querySelector('.time-slots');
+                timeSlots.innerHTML = days.map(day => `
+                    <div class="time-slot">
+                        <div class="time-slot-header">${day}</div>
+                        <div class="time-inputs">
+                            <div class="mb-3">
+                                <label class="form-label">Start Time</label>
+                                <input type="time" class="form-control" name="${day.toLowerCase()}_start" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">End Time</label>
+                                <input type="time" class="form-control" name="${day.toLowerCase()}_end" required>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                timeSchedule.style.display = 'none';
+            }
+        }
+
+        // Initialize select2 dropdowns
+        $(document).ready(function() {
+            // Initialize country select with flags
+            $('.select2-country').select2({
+                theme: 'bootstrap-5',
+                templateResult: formatCountry,
+                templateSelection: formatCountry,
+                ajax: {
+                    url: '/api/countries', // You'll need to create this endpoint in Laravel
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return {
+                            results: data.map(country => ({
+                                id: country.id,
+                                text: country.name,
+                                flag: country.flag
+                            }))
+                        };
+                    }
+                }
+            });
+
+            // Initialize state select
+            $('.select2-state').select2({
+                theme: 'bootstrap-5',
+                ajax: {
+                    url: function() {
+                        const countryId = $('.select2-country').val();
+                        return `/api/states/${countryId}`; // You'll need to create this endpoint
+                    },
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return {
+                            results: data.map(state => ({
+                                id: state.id,
+                                text: state.name
+                            }))
+                        };
+                    }
+                }
+            });
+
+            // Initialize city select
+            $('.select2-city').select2({
+                theme: 'bootstrap-5',
+                ajax: {
+                    url: function() {
+                        const stateId = $('.select2-state').val();
+                        return `/api/cities/${stateId}`; // You'll need to create this endpoint
+                    },
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return {
+                            results: data.map(city => ({
+                                id: city.id,
+                                text: city.name
+                            }))
+                        };
+                    }
+                }
+            });
+
+            // Handle country change
+            $('.select2-country').on('change', function() {
+                const countryId = $(this).val();
+                if (countryId) {
+                    $('.select2-state').prop('disabled', false).val(null).trigger('change');
+                    $('.select2-city').prop('disabled', true).val(null).trigger('change');
+                } else {
+                    $('.select2-state, .select2-city').prop('disabled', true).val(null).trigger('change');
+                }
+            });
+
+            // Handle state change
+            $('.select2-state').on('change', function() {
+                const stateId = $(this).val();
+                if (stateId) {
+                    $('.select2-city').prop('disabled', false).val(null).trigger('change');
+                } else {
+                    $('.select2-city').prop('disabled', true).val(null).trigger('change');
+                }
+            });
+        });
+
+        // Format country option with flag
+        function formatCountry(country) {
+            if (!country.id || !country.flag) return country.text;
+            return $(`<span><img src="${country.flag}" class="country-flag" style="width: 20px; margin-right: 10px;"/> ${country.text}</span>`);
+        }
+
+        function submitForm() {
+            // Collect all form data
+            const formData = {};
+            const forms = document.querySelectorAll('.form-step');
+            forms.forEach(form => {
+                const formElements = form.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    const element = formElements[i];
+                    if (element.name) {
+                        formData[element.name] = element.value;
+                    }
+                }
+            });
+            
+            // Here you would typically send the data to your Laravel backend
+            console.log('Form submitted:', formData);
+            alert('Form submitted successfully!');
+        }
+
+        function resetForm() {
+            // Reset file input
+            fileInput.value = '';
+            
+            // Hide thank you message
+            document.getElementById('thankYouMessage').style.display = 'none';
+            
+            // Show drag area
+            dragArea.style.display = 'block';
+            
+            // Reset column layout
+            document.querySelector('.col-md-6').classList.remove('full-width');
+            formColumn.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
