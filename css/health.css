@@ -1,0 +1,250 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #0b6fc0;
+    --black-color: #000;
+    --white-color: #fff;
+    --secondary-color: #0c74c2;
+    --green-color: #40a737;
+    --light-gray: #555555;
+    --bg-color: #f6f6f6;
+    --btn-gradient: linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
+}
+
+body {
+    background: var(--bg-color) !important;
+}
+
+/* Navbar start */
+.active {
+    color: var(--primary-color) !important;
+    font-weight: bold !important;
+}
+
+.nav-container {
+    height: 100px;
+    background: var(--bg-color) !important;
+}
+
+.dropdown-menu {
+    border: none !important;
+}
+
+.navbar-toggler {
+    border: none !important;
+    outline: none !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.primary-btn {
+    padding: 3px 33px;
+    border-radius: 50px;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    font-size: 18px;
+    outline: none !important;
+    transition: 0.2s ease;
+}
+
+.primary-btn:hover {
+    background: linear-gradient(to right, #0b6fc0, #0ae0fc);
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* Navbar end */
+/* Health start */
+.health-section{
+    padding: 5% 0;
+}
+
+.health-heading {
+    font-weight: 200;
+}
+
+.second-heading {
+    font-size: 43px;
+    padding-left: 45px;
+    font-weight: 500 !important;
+    color: var(--primary-color);
+}
+
+.health-content p {
+    color: #2e2e2e !important;
+    font-size: 18px;
+}
+
+.search-bar {
+    position: relative;
+}
+
+.search-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.search-btn {
+    background: var(--secondary-color) !important;
+    width: 48px;
+    height: 43px;
+    border-radius: 5px;
+    border: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    right: 1%;
+    display: grid;
+    place-items: center;
+
+}
+
+.search-input {
+    border: 0;
+    width: 100%;
+    height: 52px;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    outline: 0 !important;
+}
+
+.dropdown {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    right: 10%;
+}
+
+.dropdown-toggle {
+    font-size: 14px;
+    color: #666;
+}
+
+.dropdown-toggle:hover {
+    color: #666;
+}
+
+.dropdown-toggle:focus {
+    border: none !important;
+}
+
+.dropdown-menu {
+    font-size: 14px;
+}
+
+.dropdown-menu li a:active {
+    background: transparent !important;
+}
+
+/* Health end */
+/* Health educate start */
+.educate-container {
+    padding: 10% 0;
+}
+
+.educate-text h1 {
+    font-size: 2.2rem;
+    line-height: 45px;
+}
+
+.educate-text p {
+    margin-top: 20px;
+}
+
+.educate-text p {
+    color: var(--light-gray);
+}
+
+.educate-content h3 {
+    font-size: 25px;
+    text-wrap: nowrap;
+}
+
+.educate-content p {
+    color: var(--light-gray);
+}
+
+.educate-img {
+    background: #24bee026;
+    width: 76px;
+    height: 76px;
+    display: grid;
+    place-items: center;
+    border-radius: 20px;
+}
+
+.educate-card:hover {
+    box-shadow: 5px 5px 20px #24bee040;
+    background: rgb(255, 255, 255);
+}
+
+.educate-card {
+    border-radius: 20px;
+    transition: 0.2s linear;
+}
+
+/* Health educate end */
+/* Blog Start */
+.blog-section {
+    padding: 80px 0;
+    padding-bottom: 120px;
+}
+
+.health-img img {
+    width: 500px !important;
+}
+
+.blog-card {
+    background: white;
+    border-radius: 7px;
+}
+
+.blog-content {
+    padding: 10px;
+}
+
+.blog-info span {
+    color: var(--light-gray);
+}
+
+.blog-content h4 {
+    color: #1b3c74;
+    font-size: 19px;
+}
+
+.blog-content h4 {
+    color: #1b3c74;
+    font-size: 19px;
+}
+
+.blog-user span {
+    font-size: 18px;
+    color: #1b3c74;
+}
+
+.blog-heading h6 {
+    color: #2aa7ff !important;
+}
+
+.blog-heading h1 {
+    color: #1B3C74 !important;
+}
+
+/* Blog End */

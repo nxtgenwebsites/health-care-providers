@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #0b6fc0;
+    --black-color: #000;
+    --white-color: #fff;
+    --secondary-color: #0c74c2;
+    --green-color: #40a737;
+    --light-gray: #555555;
+    --bg-color: #f6f6f6;
+    --btn-gradient: linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: var(--bg-color);
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+/* Navbar Start */
+.navbar {
+    height: 100px;
+}
+
+.dropdown-menu {
+    border: none !important;
+}
+
+.navbar-toggler {
+    border: none !important;
+    outline: none !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none !important;
+}
+
+.active {
+    color: var(--primary-color) !important;
+    font-weight: bold !important;
+}
+
+/* Navbar End */
+/* Emergency start */
+.emergency-section {
+    padding: 80px 0;
+}
+.first-heading {
+    font-weight: 200;
+}
+.second-heading {
+    font-size: 50px;
+    padding-left: 45px;
+    color: var(--primary-color);
+}
+
+.emergency-heading p {
+    color: #2e2e2e !important;
+    font-size: 18px;
+}
+
+.emergency-heading button {
+    border: 0;
+    background: var(--btn-gradient) !important;
+    padding: 9px 13px;
+}
+
+.map-section {
+    padding: 10% 0;
+}
+
+.map-heading h2 {
+    font-size: 25px;
+}
+
+.current-location img {
+    cursor: pointer;
+}
+
+/* Emergency End */
