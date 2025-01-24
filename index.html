@@ -842,106 +842,122 @@
                 };
             }
         });
-        $(document).ready(function () {
-            const countryDropdown = $('#country');
-            const stateDropdown = $('#state');
-            const cityDropdown = $('#city');
-        
-            // Step 1: Fetch Countries
-            function loadCountries() {
-                $.ajax({
-                    url: 'https://restcountries.com/v3.1/all',
-                    method: 'GET',
-                    success: function (data) {
-                        countryDropdown.empty().append('<option value="">Select Country</option>');
-                        data.forEach(country => {
-                            countryDropdown.append(new Option(country.name.common, country.cca2)); // Use ISO code as value
-                        });
-                    },
-                    error: function () {
-                        alert('Failed to load countries. Try again later.');
-                    }
-                });
-            }
-        
-            // Step 2: Fetch States (Using GeoDB API)
-            function loadStates(countryCode) {
-                $.ajax({
-                    url: `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${countryCode}/regions`,
-                    method: 'GET',
-                    headers: {
-                        'X-RapidAPI-Key': 'YOUR_RAPIDAPI_KEY', // Replace with your RapidAPI Key
-                        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-                    },
-                    success: function (data) {
-                        stateDropdown.empty().append('<option value="">Select State</option>');
-                        if (data.data && data.data.length) {
-                            data.data.forEach(state => {
-                                stateDropdown.append(new Option(state.name, state.code));
-                            });
-                            stateDropdown.prop('disabled', false);
-                        } else {
-                            alert('No states found for the selected country.');
-                        }
-                    },
-                    error: function () {
-                        alert('Failed to load states. Try again later.');
-                    }
-                });
-            }
-        
-            // Step 3: Fetch Cities (Using GeoDB API)
-            function loadCities(stateCode, countryCode) {
-                $.ajax({
-                    url: `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${countryCode}/regions/${stateCode}/cities`,
-                    method: 'GET',
-                    headers: {
-                        'X-RapidAPI-Key': 'YOUR_RAPIDAPI_KEY', // Replace with your RapidAPI Key
-                        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-                    },
-                    success: function (data) {
-                        cityDropdown.empty().append('<option value="">Select City</option>');
-                        if (data.data && data.data.length) {
-                            data.data.forEach(city => {
-                                cityDropdown.append(new Option(city.name, city.id));
-                            });
-                            cityDropdown.prop('disabled', false);
-                        } else {
-                            alert('No cities found for the selected state.');
-                        }
-                    },
-                    error: function () {
-                        alert('Failed to load cities. Try again later.');
-                    }
-                });
-            }
-        
-            // Step 4: Event Listeners
-            countryDropdown.on('change', function () {
-                const countryCode = $(this).val();
-                if (countryCode) {
-                    loadStates(countryCode);
-                    cityDropdown.prop('disabled', true).empty().append('<option value="">Select City</option>');
-                } else {
-                    stateDropdown.prop('disabled', true).empty().append('<option value="">Select State</option>');
-                    cityDropdown.prop('disabled', true).empty().append('<option value="">Select City</option>');
-                }
+// Elements
+// Elements
+const countryDropdown = $('#country');
+const stateDropdown = $('#state');
+const cityDropdown = $('#city');
+
+// Step 1: Load Countries
+function loadCountries() {
+    $.ajax({
+        url: 'https://restcountries.com/v3.1/all',
+        method: 'GET',
+        success: function (data) {
+            // Sort countries alphabetically
+            const sortedCountries = data.sort((a, b) =>
+                a.name.common.localeCompare(b.name.common)
+            );
+
+            // Populate the country dropdown
+            countryDropdown.empty().append('<option value="">Select Country</option>');
+            sortedCountries.forEach(country => {
+                countryDropdown.append(new Option(country.name.common, country.cca2)); // ISO code as value
             });
-        
-            stateDropdown.on('change', function () {
-                const stateCode = $(this).val();
-                const countryCode = countryDropdown.val();
-                if (stateCode) {
-                    loadCities(stateCode, countryCode);
-                } else {
-                    cityDropdown.prop('disabled', true).empty().append('<option value="">Select City</option>');
-                }
-            });
-        
-            // Load countries on page load
-            loadCountries();
-        });
-        
+        },
+        error: function () {
+            alert('Failed to load countries. Try again later.');
+        }
+    });
+}
+
+// Step 2: Load States
+function loadStates(countryCode) {
+    console.log('Fetching states for country code:', countryCode); // Debugging log
+    $.ajax({
+        url: `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${countryCode}/regions`,
+        method: 'GET',
+        headers: {
+            'x-rapidapi-host': 'wft-geo-db.p.rapidapi.com',
+            'x-rapidapi-key': 'b83f74efaamshb4574179b332748p156dadjsn907ed0ab88f9' // Replace with your actual API key
+        },
+        success: function (data) {
+            console.log('States fetched successfully:', data); // Debugging log
+            stateDropdown.empty().append('<option value="">Select State</option>');
+            if (data.data && data.data.length > 0) {
+                data.data.forEach(state => {
+                    stateDropdown.append(new Option(state.name, state.code));
+                });
+                stateDropdown.prop('disabled', false);
+            } else {
+                alert('No states found for the selected country.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching states:', error); // Debugging log
+            alert('Failed to load states. Please try again later.');
+        }
+    });
+}
+
+// Step 3: Load Cities
+function loadCities(stateCode, countryCode) {
+    console.log('Fetching cities for state:', stateCode, 'in country:', countryCode); // Debugging log
+    $.ajax({
+        url: `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${countryCode}/regions/${stateCode}/cities`,
+        method: 'GET',
+        headers: {
+            'x-rapidapi-host': 'wft-geo-db.p.rapidapi.com',
+            'x-rapidapi-key': 'b83f74efaamshb4574179b332748p156dadjsn907ed0ab88f9' // Replace with your actual API key
+        },
+        success: function (data) {
+            console.log('Cities fetched successfully:', data); // Debugging log
+            cityDropdown.empty().append('<option value="">Select City</option>');
+            if (data.data && data.data.length > 0) {
+                data.data.forEach(city => {
+                    cityDropdown.append(new Option(city.name, city.id));
+                });
+                cityDropdown.prop('disabled', false);
+            } else {
+                alert('No cities found for the selected state.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching cities:', error); // Debugging log
+            alert('Failed to load cities. Please try again later.');
+        }
+    });
+}
+
+// Step 4: Event Listeners
+$(document).ready(function () {
+    // Load countries on page load
+    loadCountries();
+
+    // When a country is selected, load states
+    countryDropdown.on('change', function () {
+        const countryCode = $(this).val();
+        if (countryCode) {
+            loadStates(countryCode);
+            cityDropdown.prop('disabled', true).empty().append('<option value="">Select City</option>');
+        } else {
+            stateDropdown.prop('disabled', true).empty().append('<option value="">Select State</option>');
+            cityDropdown.prop('disabled', true).empty().append('<option value="">Select City</option>');
+        }
+    });
+
+    // When a state is selected, load cities
+    stateDropdown.on('change', function () {
+        const stateCode = $(this).val();
+        const countryCode = countryDropdown.val();
+        if (stateCode && countryCode) {
+            loadCities(stateCode, countryCode);
+        } else {
+            cityDropdown.prop('disabled', true).empty().append('<option value="">Select City</option>');
+        }
+    });
+});
+
     </script>
 </body>
 
