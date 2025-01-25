@@ -88,7 +88,7 @@
           padding: 6px 23px;
         }
 
-        #nextBtn {
+        #nextBtn, #prevBtn {
             background:  linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
             border: none;
             padding: 6px 23px;
@@ -405,6 +405,58 @@
 .download-btn {
     font-weight: 500;
 }
+
+.upload-txt {
+    color: black !important;
+}
+
+/* Add this to your existing CSS */
+select.form-select option:first-child {
+    color: #6c757d;  /* This is Bootstrap's default placeholder color */
+}
+
+select.form-select {
+    color: #6c757d;  /* Initial state color */
+}
+
+/* When an actual option is selected (not the placeholder) */
+select.form-select:not(:invalid) {
+    color: #212529;  /* Bootstrap's default text color */
+}
+
+/* Add to your existing CSS */
+.form-check-inline {
+    margin-right: 0;
+}
+
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-label {
+    cursor: pointer;
+    color: #495057;
+    font-weight: 400;
+}
+
+.form-check-input:checked {
+    background-color: #0b6fc0;
+    border-color: #0b6fc0;
+}
+
+.gap-3 {
+    gap: 1rem !important;
+}
+
+.radio-label {
+    font-weight: 500 !important;
+    color: #495057 !important;
+    
+}
+.right-column {
+    padding-left: 12em;
+    padding-right:12em;
+}
     </style>
 </head>
 
@@ -462,7 +514,7 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link w-100" id="form-tab" data-bs-toggle="tab" data-bs-target="#form" type="button" role="tab">
-                                Add Health Care Provider
+                                Health Care Providers Registration Form
                             </button>
                         </li>
                     </ul>
@@ -475,19 +527,19 @@
                             <div class="card-body">
                                 <div class="text-center mb-5">
                                     <p class="text-muted download-btn">
-                                        Upload organizations using a file containing all of their information.
-                                        This is particularly useful when you have a large number of organizations to import.
+                                        Upload Health Care providers' data using a file containing all of their information.
+                                        This is particularly useful when you have a large number of health care providers to import.
                                     </p>
                                 </div>
     
                                 <div class="mb-3 d-flex justify-content-between align-items-center">
-                                    <span class="text-muted download-btn">
+                                    <span class="text-muted download-btn upload-txt">
                                         <i class="bi bi-cloud-arrow-up"></i>
                                         Upload your file
                                     </span>
                                     <a href="assets\DB Structure for Health Care Providers.xlsx" class="text-primary text-decoration-none download-btn">
                                         <i class="fas fa-download me-1"></i>
-                                        Download example file (.xls)
+                                        Download sample file (.xls format)
                                     </a>
                                 </div>
     
@@ -501,7 +553,7 @@
                                             </svg>
                                         </div>
                                         <p class="text-muted mb-2 download-btn">Select your file or drag and drop it here</p>
-                                        <p class="text-muted small mb-3 download-btn">csv, xls, xlsx or txt (max. 80MB)</p>
+                                        <p class="text-muted small mb-3 download-btn">.csv, .xls, .xlsx or .txt (max. 80MB)</p>
                                         <button class="btn btn-primary browsebtn px-4" onclick="document.getElementById('fileInput').click()">
                                             Browse File
                                         </button>
@@ -532,7 +584,7 @@
     
                         <!-- Step Form Tab -->
                         <div class="tab-pane fade" id="form" role="tabpanel">
-                            <div class="card-body">
+                            <div class="card-body right-column">
                                 <!-- Progress Bar -->
                                 <div class="progress mb-4" style="height: 3px;">
                                     <div class="progress-bar" role="progressbar" id="formProgress" style="width: 33%"></div>
@@ -547,27 +599,41 @@
                                 <!-- Step 1: Organization Details -->
                                 <form id="step1" class="form-step">
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="organization_name" placeholder="Organization Name*" required>
+                                        <input type="text" class="form-control" name="org_name" placeholder="Organization Name*" required>
                                     </div>
                                     <div class="mb-3">
-                                        <select class="form-select" name="facility_type" required>
+                                        <select class="form-select" name="facility_type" id="facilityType" required>
                                             <option value="">Facility Type*</option>
                                             <option value="hospital">Hospital</option>
                                             <option value="emergency">Emergency</option>
                                             <option value="medical labs">Medical Labs</option>
                                             <option value="chemists">Chemists</option>
+                                            <option value="other">Other</option>
                                         </select>
+                                        <!-- Add this new div for custom facility type -->
+                                        <div id="otherFacilityType" style="display: none;" class="mt-2">
+                                            <input type="text" class="form-control" name="other_facility_type" placeholder="Please specify facility type*">
+                                        </div>
                                     </div>
+                                    
+                                    <!-- Update the Ownership Type select and add a new input field -->
                                     <div class="mb-3">
-                                        <select class="form-select" name="ownership_type" required>
+                                        <select class="form-select" name="ownership_type" id="ownershipType" required>
                                             <option value="">Ownership Type*</option>
                                             <option value="government">Government</option>
                                             <option value="state">State</option>
                                             <option value="private">Private</option>
                                             <option value="charity">Charity</option>
                                             <option value="church">Church</option>
+                                            <option value="other">Other</option>
                                         </select>
+                                        <!-- Add this new div for custom ownership type -->
+                                        <div id="otherOwnershipType" style="display: none;" class="mt-2">
+                                            <input type="text" class="form-control" name="other_ownership_type" placeholder="Please specify ownership type*">
+                                        </div>
                                     </div>
+                                    
+                                    
                                     <div class="mb-3">
                                         <input type="email" class="form-control" name="email_address" placeholder="Email Address*" required>
                                     </div>
@@ -575,7 +641,7 @@
                                         <input type="tel" class="form-control" name="phone_number" placeholder="Phone Number*" required>
                                     </div>
                                     <div class="text-end">
-                                        <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next</button>
+                                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep(event)">Next</button>
                                     </div>
                                 </form>
     
@@ -598,8 +664,8 @@
                                         <input type="text" class="form-control" name="zipcode" placeholder="Zipcode*" required>
                                     </div>
                                     <div class="d-flex justify-content-between">
-                                        <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()">Previous</button>
-                                        <button class="btn btn-primary" onclick="nextStep()">Next</button>
+                                        <button type="button" class="btn btn-secondary" id="prevBtn" onclick="prevStep(event)">Previous</button>
+                                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep(event)">Next</button>
                                     </div>
                                 </form>
     
@@ -610,30 +676,35 @@
                                     </div>
                                     
                                     <!-- A&E Available Section -->
-                                    <div class="mb-3 d-flex align-items-center">
-                                        <div class="me-3">Is your facility A&E?</div>
-                                        <div class="form-check form-check-inline mb-0">
-                                            <input class="form-check-input" type="radio" name="ae_available" id="ae_yes" value="yes">
-                                            <label class="form-check-label" for="ae_yes">Yes</label>
-                                        </div>
-                                        <div class="form-check form-check-inline mb-0">
-                                            <input class="form-check-input" type="radio" name="ae_available" id="ae_no" value="no">
-                                            <label class="form-check-label" for="ae_no">No</label>
+                                    <div class="mb-3 d-flex justify-content-between align-items-center" style="margin-bottom: 40px !important; margin-top: 40px !important;">
+                                        <div class="radio-label">Is your facility A&E?</div>
+                                        <div class="d-flex gap-3">
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input" type="radio" name="ae_available" id="ae_yes" value="yes">
+                                                <label class="form-check-label" for="ae_yes">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input" type="radio" name="ae_available" id="ae_no" value="no">
+                                                <label class="form-check-label" for="ae_no">No</label>
+                                            </div>
                                         </div>
                                     </div>
-    
+                                    
                                     <!-- 24 Hours Service Section -->
-                                    <div class="mb-3 d-flex align-items-center">
-                                        <div class="me-3">Is 24 Hours Service?*</div>
-                                        <div class="form-check form-check-inline mb-0">
-                                            <input class="form-check-input" type="radio" name="is_24hours" id="24hours_yes" value="yes" checked>
-                                            <label class="form-check-label" for="24hours_yes">Yes</label>
-                                        </div>
-                                        <div class="form-check form-check-inline mb-0">
-                                            <input class="form-check-input" type="radio" name="is_24hours" id="24hours_no" value="no">
-                                            <label class="form-check-label" for="24hours_no">No</label>
+                                    <div class="mb-3 d-flex justify-content-between align-items-center">
+                                        <div class="radio-label">Is 24 Hours Service?*</div>
+                                        <div class="d-flex gap-3">
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input" type="radio" name="is_24hours" id="24hours_yes" value="yes" checked>
+                                                <label class="form-check-label" for="24hours_yes">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input" type="radio" name="is_24hours" id="24hours_no" value="no">
+                                                <label class="form-check-label" for="24hours_no">No</label>
+                                            </div>
                                         </div>
                                     </div>
+                                    
     
                                     <!-- Time Schedule Fields -->
                                     <div id="timeSchedule" style="display: none;" class="mt-4">
@@ -644,8 +715,8 @@
                                     </div>
     
                                     <div class="d-flex justify-content-between mt-4">
-                                        <button class="btn btn-secondary" onclick="prevStep()">Previous</button>
-                                        <button class="btn btn-primary" onclick="submitForm()">Submit</button>
+                                        <button type="button" class="btn btn-secondary" onclick="prevStep(event)">Previous</button>
+                                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="submitForm(event)">Submit</button>
                                     </div>
                                 </form>
                             </div>
@@ -915,8 +986,6 @@ function showFieldMapping(csvHeaders) {
 }
 function submitMapping() {
     const mapping = {};
-    
-    // Get all field mappings
     mappingFields.forEach(field => {
         const select = document.querySelector(`select[data-field="${field}"]`);
         if (select && select.value) {
@@ -925,28 +994,14 @@ function submitMapping() {
     });
     
     console.log('Field mapping:', mapping);
-    
-    // Hide the entire container except header and footer
-    const container = document.querySelector('.container-fluid.py-4');
-    if (container) {
-        container.style.display = 'none';
+    showThankYouMessage(true); // Pass true for bulk upload
+}
+
+function submitForm(event) {
+    if (event) {
+        event.preventDefault();
     }
-    
-    // Show the thank you message
-    const thankYouMessage = document.getElementById('thankYouMessage');
-    if (thankYouMessage) {
-        // Move thank you message outside the main container
-        document.body.insertBefore(thankYouMessage, document.querySelector('footer'));
-        thankYouMessage.style.display = 'block';
-        thankYouMessage.style.margin = '4rem auto';
-        thankYouMessage.style.maxWidth = '600px';
-        
-        // Scroll to thank you message
-        thankYouMessage.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'center'
-        });
-    }
+    showThankYouMessage(false); // Pass false for step form
 }
         // Form step handling
         // Form step handling
@@ -987,28 +1042,35 @@ function submitMapping() {
             updateProgress();
         }
         
-        function nextStep() {
-            // Validate current step
-            const currentForm = document.getElementById(`step${currentStep}`);
-            if (currentForm.checkValidity()) {
-                if (currentStep < totalSteps) {
-                    currentStep++;
-                    showStep(currentStep);
-                } else {
-                    // Handle form submission
-                    submitForm();
-                }
-            } else {
-                currentForm.reportValidity();
-            }
+        // Replace the existing nextStep and prevStep functions with these:
+function nextStep(e) {
+    if (e) {
+        e.preventDefault(); // Prevent form submission
+    }
+    // Validate current step
+    const currentForm = document.getElementById(`step${currentStep}`);
+    if (currentForm.checkValidity()) {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            showStep(currentStep);
+        } else {
+            // Handle form submission
+            submitForm();
         }
-        
-        function prevStep() {
-            if (currentStep > 1) {
-                currentStep--;
-                showStep(currentStep);
-            }
-        }
+    } else {
+        currentForm.reportValidity();
+    }
+}
+
+function prevStep(e) {
+    if (e) {
+        e.preventDefault(); // Prevent form submission
+    }
+    if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+    }
+}
         
         // Handle time schedule visibility
         // Handle time schedule visibility
@@ -1297,6 +1359,76 @@ document.querySelectorAll('#providerTabs button').forEach(tab => {
         }, 50)
     })
 })
+
+// Add this to your existing JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle Facility Type
+    const facilityType = document.getElementById('facilityType');
+    const otherFacilityType = document.getElementById('otherFacilityType');
+    const otherFacilityInput = otherFacilityType.querySelector('input');
+
+    facilityType.addEventListener('change', function() {
+        if (this.value === 'other') {
+            otherFacilityType.style.display = 'block';
+            otherFacilityInput.required = true;
+        } else {
+            otherFacilityType.style.display = 'none';
+            otherFacilityInput.required = false;
+            otherFacilityInput.value = ''; // Clear the input when hidden
+        }
+    });
+
+    // Handle Ownership Type
+    const ownershipType = document.getElementById('ownershipType');
+    const otherOwnershipType = document.getElementById('otherOwnershipType');
+    const otherOwnershipInput = otherOwnershipType.querySelector('input');
+
+    ownershipType.addEventListener('change', function() {
+        if (this.value === 'other') {
+            otherOwnershipType.style.display = 'block';
+            otherOwnershipInput.required = true;
+        } else {
+            otherOwnershipType.style.display = 'none';
+            otherOwnershipInput.required = false;
+            otherOwnershipInput.value = ''; // Clear the input when hidden
+        }
+    });
+});
+
+function showThankYouMessage(fromBulkUpload = false) {
+    // Hide the entire container except header and footer
+    const container = document.querySelector('.container-fluid.py-4');
+    if (container) {
+        container.style.display = 'none';
+    }
+    
+    // Show and update the thank you message
+    const thankYouMessage = document.getElementById('thankYouMessage');
+    if (thankYouMessage) {
+        // Update message and button based on source
+        if (fromBulkUpload) {
+            thankYouMessage.querySelector('p.text-muted').textContent = 'Your file has been successfully submitted and fields have been mapped.';
+            thankYouMessage.querySelector('button').textContent = 'Upload Another File';
+            thankYouMessage.querySelector('button').onclick = resetForm;
+        } else {
+            thankYouMessage.querySelector('p.text-muted').textContent = "We've successfully registered your facility as a Health Care Provider.";
+            thankYouMessage.querySelector('button').textContent = 'Return To Home';
+            thankYouMessage.querySelector('button').onclick = () => window.location.href = '/';
+        }
+
+        // Move thank you message outside the main container
+        document.body.insertBefore(thankYouMessage, document.querySelector('footer'));
+        thankYouMessage.style.display = 'block';
+        thankYouMessage.style.margin = '4rem auto';
+        thankYouMessage.style.maxWidth = '600px';
+        
+        // Scroll to thank you message
+        thankYouMessage.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }
+}
  </script>
 </body>
 
