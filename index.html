@@ -388,7 +388,84 @@
 .card-body {
     padding: 0;
 }
+.drag-area {
+    border: 2px dashed #444444;
+    border-radius: 5px;
+    padding: 30px;
+    text-align: center;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
 
+.drag-area.active {
+    border: 2px solid #0b6fc0;
+    background: #e9ecef;
+}
+
+.drag-area .icon {
+    font-size: 50px;
+    color: #0b6fc0;
+}
+
+.progress-wrapper {
+    margin-top: 20px;
+    display: none;
+}
+
+.progress {
+    height: 6px !important;
+}
+
+.progress-bar {
+    background: linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
+    transition: width 0.3s ease;
+}
+
+.upload-status {
+    margin-top: 10px;
+    display: none;
+}
+
+.file-details {
+    margin-top: 15px;
+    display: none;
+}
+
+.browsebtn {
+    background: linear-gradient(93.22deg, #0b6fc0 1.06%, #1fd2e5 97.02%);
+    border: none;
+    color: white;
+    padding: 8px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.browsebtn:hover {
+    opacity: 0.9;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 5px;
+}
+
+.check-icon {
+    color: #28a745;
+    font-size: 48px;
+    margin-bottom: 15px;
+}
     </style>
 </head>
 
@@ -476,8 +553,8 @@
     
                                 <!-- Drag & Drop Area -->
                                 <div class="drag-area" id="dragArea">
-                                    <div class="text-center py-3">
-                                        <div class="mb-2">
+                                    <div class="upload-content">
+                                        <div class="icon mb-3">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="66" height="66" fill="#8B98A5" class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
                                                 <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708z"/>
                                                 <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
@@ -485,12 +562,41 @@
                                         </div>
                                         <p class="text-muted mb-2">Select your file or drag and drop it here</p>
                                         <p class="text-muted small mb-3">CSV, XLS or XLSX (max. 800MB)</p>
-                                        <button class="btn btn-primary browsebtn px-4" onclick="document.getElementById('fileInput').click()">
+                                        <button class="browsebtn" onclick="document.getElementById('fileInput').click()">
                                             Browse File
                                         </button>
                                         <input type="file" id="fileInput" hidden accept=".csv,.xls,.xlsx">
                                     </div>
+                                
+                                    <div class="file-details">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#0b6fc0" class="bi bi-file-earmark me-2" viewBox="0 0 16 16">
+                                                <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+                                            </svg>
+                                            <span class="filename text-primary"></span>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="progress-wrapper">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <div class="upload-status text-center mt-2">
+                                            <span class="progress-text">0% uploaded</span>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="overlay">
+                                        <div class="check-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                            </svg>
+                                        </div>
+                                        <p class="text-success mb-3">Upload Complete!</p>
+                                        <button class="browsebtn" onclick="resetUpload()">Upload Another File</button>
+                                    </div>
                                 </div>
+                                
     
                                 <!-- Field Mapping Section -->
                                 <div class="field-mapping mt-4" id="fieldMapping" style="display: none;">
@@ -737,6 +843,13 @@ const fileInput = document.getElementById('fileInput');
 const filePreview = document.getElementById('filePreview');
 const startImportBtn = document.getElementById('startImportBtn');
 const fieldMapping = document.getElementById('fieldMapping');
+
+const progressBar = document.querySelector('.progress-bar');
+const progressWrapper = document.querySelector('.progress-wrapper');
+const uploadStatus = document.querySelector('.upload-status');
+const fileDetails = document.querySelector('.file-details');
+const overlay = document.querySelector('.overlay');
+const uploadContent = document.querySelector('.upload-content');
 let selectedFile = null;
 // Add required fields for mapping
 const mappingFields = [
@@ -1245,6 +1358,113 @@ document.querySelectorAll('#providerTabs button').forEach(tab => {
         }, 50)
     })
 })
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dragArea.addEventListener(eventName, preventDefaults, false);
+    document.body.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults (e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+// Highlight drop zone when item is dragged over it
+['dragenter', 'dragover'].forEach(eventName => {
+    dragArea.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dragArea.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight(e) {
+    dragArea.classList.add('active');
+}
+
+function unhighlight(e) {
+    dragArea.classList.remove('active');
+}
+
+// Handle dropped files
+dragArea.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const file = dt.files[0];
+    handleFile(file);
+}
+
+fileInput.addEventListener('change', function(e) {
+    handleFile(e.target.files[0]);
+});
+
+function handleFile(file) {
+    if (!file) return;
+
+    const validTypes = [
+        'text/csv',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ];
+
+    if (!validTypes.includes(file.type)) {
+        alert('Please upload a CSV, XLS, or XLSX file');
+        return;
+    }
+
+    selectedFile = file;
+    showFileDetails(file);
+    simulateUpload();
+}
+
+function showFileDetails(file) {
+    uploadContent.style.display = 'none';
+    fileDetails.style.display = 'block';
+    document.querySelector('.filename').textContent = file.name;
+    progressWrapper.style.display = 'block';
+    uploadStatus.style.display = 'block';
+}
+
+function simulateUpload() {
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 10;
+        progressBar.style.width = progress + '%';
+        document.querySelector('.progress-text').textContent = `${progress}% uploaded`;
+
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                showUploadComplete();
+            }, 500);
+        }
+    }, 300);
+}
+
+function showUploadComplete() {
+    overlay.style.display = 'flex';
+}
+
+function resetUpload() {
+    selectedFile = null;
+    fileInput.value = '';
+    uploadContent.style.display = 'block';
+    fileDetails.style.display = 'none';
+    progressWrapper.style.display = 'none';
+    uploadStatus.style.display = 'none';
+    overlay.style.display = 'none';
+    progressBar.style.width = '0%';
+    document.querySelector('.progress-text').textContent = '0% uploaded';
+}
+
+// Allow clicking anywhere in drag area to trigger file input
+dragArea.addEventListener('click', function(e) {
+    if (!selectedFile && !e.target.classList.contains('browsebtn')) {
+        fileInput.click();
+    }
+});
+
+
  </script>
 </body>
 
