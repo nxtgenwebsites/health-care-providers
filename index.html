@@ -768,7 +768,7 @@ function showFieldMapping(csvHeaders) {
 function submitMapping() {
     const mapping = {};
     
-    // Get all field mappings without validation
+    // Get all field mappings
     mappingFields.forEach(field => {
         const select = document.querySelector(`select[data-field="${field}"]`);
         if (select && select.value) {
@@ -776,21 +776,27 @@ function submitMapping() {
         }
     });
     
-    // Here you would typically send the mapping to your backend
     console.log('Field mapping:', mapping);
     
-    // Hide the mapping interface and drag area
-    fieldMapping.style.display = 'none';
-    dragArea.style.display = 'none';
+    // Hide the entire container except header and footer
+    const container = document.querySelector('.container-fluid.py-4');
+    if (container) {
+        container.style.display = 'none';
+    }
     
     // Show the thank you message
     const thankYouMessage = document.getElementById('thankYouMessage');
     if (thankYouMessage) {
+        // Move thank you message outside the main container
+        document.body.insertBefore(thankYouMessage, document.querySelector('footer'));
         thankYouMessage.style.display = 'block';
-        // Scroll to thank you message with smooth behavior
+        thankYouMessage.style.margin = '4rem auto';
+        thankYouMessage.style.maxWidth = '600px';
+        
+        // Scroll to thank you message
         thankYouMessage.scrollIntoView({ 
             behavior: 'smooth',
-            block: 'center'  // This will center the element in the viewport
+            block: 'center'
         });
     }
 }
@@ -1043,57 +1049,84 @@ function resetForm() {
 }
 
 function submitForm() {
-    // Hide all sections except thank you message
-    const formColumn = document.getElementById('formColumn');
-    const orDivider = document.querySelector('.or-divider');  // Updated selector
-    const uploadCard = document.querySelector('.card');
-    const pageTitle = document.querySelector('.row.mb-4'); // Page title section
-
-    // Hide all sections
-    if (formColumn) formColumn.style.display = 'none';
-    if (orDivider) orDivider.style.display = 'none';
-    if (uploadCard) uploadCard.style.display = 'none';
-    if (pageTitle) pageTitle.style.display = 'none';
+    // Hide the entire container except header and footer
+    const container = document.querySelector('.container-fluid.py-4');
+    if (container) {
+        container.style.display = 'none';
+    }
     
     // Show the thank you message
     const thankYouMessage = document.getElementById('thankYouMessage');
     if (thankYouMessage) {
+        // Move thank you message outside the main container
+        document.body.insertBefore(thankYouMessage, document.querySelector('footer'));
         thankYouMessage.style.display = 'block';
-        thankYouMessage.style.marginTop = '2rem';
-        // Scroll to thank you message with smooth behavior
+        thankYouMessage.style.margin = '4rem auto';
+        thankYouMessage.style.maxWidth = '600px';
+        
+        // Scroll to thank you message
         thankYouMessage.scrollIntoView({ 
             behavior: 'smooth',
             block: 'center'
         });
     }
-
-    // Log form submission
-    console.log('Form submitted');
 }
 
-// Update resetForm to show the OR divider again
 function resetForm() {
     selectedFile = null;
-    // Reset other elements...
-
-    // Show all sections again
-    const formColumn = document.getElementById('formColumn');
-    const orDivider = document.querySelector('.or-divider');
-    const uploadCard = document.querySelector('.card');
-    const pageTitle = document.querySelector('.row.mb-4');
-
-    if (uploadCard) uploadCard.style.display = 'block';
-    if (formColumn) formColumn.style.display = 'block';
-    if (orDivider) orDivider.style.display = 'block';
-    if (pageTitle) pageTitle.style.display = 'block';
-
-    // Hide thank you message
+    
+    // Show the main container again
+    const container = document.querySelector('.container-fluid.py-4');
+    if (container) {
+        container.style.display = 'block';
+    }
+    
+    // Move thank you message back to original container and hide it
     const thankYouMessage = document.getElementById('thankYouMessage');
     if (thankYouMessage) {
+        container.appendChild(thankYouMessage);
         thankYouMessage.style.display = 'none';
     }
-
-    // Rest of your resetForm code...
+    
+    // Reset file upload area
+    dragArea.innerHTML = `
+        <div class="text-center py-3">
+            <div class="mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="66" height="66" fill="#8B98A5" class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708z"/>
+                    <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                </svg>
+            </div>
+            <p class="text-muted mb-1 small">Select your file or drag and drop it here</p>
+            <p class="text-muted small mb-2">CSV, XLS or XLSX (max. 800MB)</p>
+            <button class="btn btn-primary browsebtn px-3 py-1" onclick="document.getElementById('fileInput').click()">
+                Browse File
+            </button>
+            <input type="file" id="fileInput" hidden accept=".csv,.xls,.xlsx">
+        </div>
+    `;
+    
+    // Reset other form elements
+    fileInput.value = '';
+    dragArea.style.display = 'block';
+    fieldMapping.style.display = 'none';
+    
+    // Show form column and reset to first step
+    const formColumn = document.getElementById('formColumn');
+    if (formColumn) {
+        formColumn.style.display = 'block';
+        currentStep = 1;
+        showStep(1);
+        document.querySelectorAll('.form-step input, .form-step select').forEach(input => {
+            input.value = '';
+        });
+    }
+    
+    // Show OR divider
+    const orDivider = document.querySelector('.or-divider');
+    if (orDivider) {
+        orDivider.style.display = 'flex';
+    }
 }
  </script>
 </body>
